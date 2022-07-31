@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class InitMotor extends CommandBase {
-  /** Creates a new InitMotor. */
-  public InitMotor() {
+public class TankDrive extends CommandBase {
+  /** Creates a new TankDrive. */
+  public TankDrive() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.spinMotor);
+    addRequirements(Robot.driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -21,14 +22,20 @@ public class InitMotor extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    final double motorSpeed = .5*Robot.m_robotContainer.GetDriverRawAxis(1);
-    Robot.spinMotor.setIntakeMotor(motorSpeed);
+    double leftStickY = Robot.m_robotContainer.GetDriverRawAxis(Constants.LEFT_STICK_Y);
+    double rightStickY = Robot.m_robotContainer.GetDriverRawAxis(Constants.RIGHT_STICK_Y);
+
+    
+    final double goSlower = .1;
+    Robot.driveTrain.setLeftMotors(leftStickY * goSlower);
+    Robot.driveTrain.setRightMotors(rightStickY * goSlower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.spinMotor.setIntakeMotor(0);
+    Robot.driveTrain.setLeftMotors(0);
+    Robot.driveTrain.setRightMotors(0);
   }
 
   // Returns true when the command should end.
