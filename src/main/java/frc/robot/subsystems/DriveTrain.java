@@ -5,8 +5,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+//import com.ctre.phoenix.motorcontrol.ControlMode;
+//import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
@@ -15,12 +18,17 @@ import frc.robot.commands.TankDrive;
 
 
 public class DriveTrain extends SubsystemBase {
-  private CANSparkMax frontLeftMotor  = new CANSparkMax(Constants.FRONT_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  private CANSparkMax frontRightMotor= new CANSparkMax(Constants.FRONT_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  private CANSparkMax backRightMotor  = new CANSparkMax(Constants.BACK_RIGHT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  private CANSparkMax backLeftMotor    = new CANSparkMax(Constants.BACK_LEFT_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+  //private TalonSRX intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR_ID);
+  private CANSparkMax FLmotor = new CANSparkMax(Constants.FL_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax FRmotor = new CANSparkMax(Constants.FR_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax BRmotor = new CANSparkMax(Constants.BR_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+  private CANSparkMax BLmotor = new CANSparkMax(Constants.BL_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-  /** Creates a new SpinMotor. */
+  private AnalogEncoder frontLeftEncoder  = new AnalogEncoder(Constants.FL_ENCODER_ID);
+  private AnalogEncoder frontRightEncoder = new AnalogEncoder(Constants.FR_ENCODER_ID);
+  private AnalogEncoder backRightEncoder  = new AnalogEncoder(Constants.BL_ENCODER_ID);
+  private AnalogEncoder backLeftEncoder   = new AnalogEncoder(Constants.BR_ENCODER_ID);
+  /** Creates a new DriveTrain. */
   public DriveTrain() {}
 
   @Override
@@ -33,14 +41,58 @@ public class DriveTrain extends SubsystemBase {
     setDefaultCommand(new TankDrive());
   }
 
-  public void setLeftMotors(double speed) {
-    frontLeftMotor.set(-speed);
-    backLeftMotor.set(-speed);
+  public void setFLspeed(double speed) {
+    FLmotor.set(speed);
+  }
+  public void setFRspeed(double speed) {
+    FRmotor.set(speed);
+  }
+  public void setBLspeed(double speed) {
+    BLmotor.set(speed);
+  }
+  public void setBRspeed(double speed) {
+    BRmotor.set(speed);
   }
 
   public void setRightMotors(double speed) {
-    frontRightMotor.set(speed);
-    backRightMotor.set(speed);
+    FRmotor.set(speed);
+    BRmotor.set(speed);
   }
 
+  public void setAngles(double speed) {
+    //FLmotor.set(angle);
+    //BLmotor.set(angle);
+    //FRmotor.set(angle);
+    //BRmotor.set(angle);
+  }
+ 
+
+  // VECTOR ADDITION
+  public static double resultantX(double mag1, double dir1, double mag2, double dir2) {
+    double x1 = mag1 * Math.cos(dir1); 
+    double x2 = mag1 * Math.cos(dir2); 
+    double resultantX = x2-x1;
+    return resultantX;
+  }
+
+  public static double resultantY(double mag1, double dir1, double mag2, double dir2) {
+    double y1 = mag1 * Math.sin(dir1); 
+    double y2 = mag1 * Math.sin(dir2); 
+    double resultantY = y2-y1;
+    return resultantY;
+  }
+
+  public static double resultantMagnitude(double mag1, double dir1, double mag2, double dir2) {
+    double resultantX = resultantX(mag1, dir1, mag2, dir2);
+    double resultantY = resultantY(mag1, dir1, mag2, dir2);
+    double resultantMagnitude = Math.sqrt(Math.pow(resultantX,2)+Math.pow(resultantY,2));
+    return resultantMagnitude;
+  }
+
+  public static double resultantDirection(double mag1, double dir1, double mag2, double dir2) {
+    double resultantX = resultantX(mag1, dir1, mag2, dir2);
+    double resultantY = resultantY(mag1, dir1, mag2, dir2);
+    double resultantDirection = Math.atan(resultantY/resultantX);
+    return resultantDirection;
+  }
 }

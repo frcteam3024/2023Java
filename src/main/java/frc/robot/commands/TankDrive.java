@@ -22,20 +22,24 @@ public class TankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftStickY = Robot.m_robotContainer.GetDriverRawAxis(Constants.LEFT_STICK_Y);
-    double rightStickY = Robot.m_robotContainer.GetDriverRawAxis(Constants.RIGHT_STICK_Y);
+    double driverYAxis = Robot.m_robotContainer.GetDriverRawAxis(Constants.DRIVE_Y_AXIS);
+    double rawSlider = Robot.m_robotContainer.GetDriverRawAxis(Constants.DRIVE_SLIDER);
+    double driverSensitivity = 0.5 * (1-rawSlider);
 
-    
-    final double goSlower = .1;
-    Robot.driveTrain.setLeftMotors(leftStickY * goSlower);
-    Robot.driveTrain.setRightMotors(rightStickY * goSlower);
+    Robot.driveTrain.setFLspeed(driverYAxis * driverSensitivity);
+    Robot.driveTrain.setFRspeed(driverYAxis * driverSensitivity);
+    Robot.driveTrain.setBLspeed(driverYAxis * driverSensitivity);
+    Robot.driveTrain.setBRspeed(driverYAxis * driverSensitivity);
+  
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.driveTrain.setLeftMotors(0);
-    Robot.driveTrain.setRightMotors(0);
+    Robot.driveTrain.setFLspeed(0);
+    Robot.driveTrain.setFRspeed(0);
+    Robot.driveTrain.setBLspeed(0);
+    Robot.driveTrain.setBRspeed(0);
   }
 
   // Returns true when the command should end.

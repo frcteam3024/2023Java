@@ -19,12 +19,25 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class RobotContainer {
 
-  private Joystick driverController = new Joystick(Constants.JOY_STICK_PORT);
+  private Joystick driverController  = new Joystick(Constants.DRIVE_JOYSTICK_PORT);
+  private Joystick copilotController = new Joystick(Constants.COPILOT_JOYSTICK_PORT);
 
   public double GetDriverRawAxis(int axis) {
-    // TODO: take char 'X' or 'Y' as input instead
     return driverController.getRawAxis(axis);
   }
+
+  public boolean GetDriverRawButton(int button) {
+    return driverController.getRawButton(button);
+  }
+
+  public double GetCopilotRawAxis(int axis) {
+    return copilotController.getRawAxis(axis);
+  }
+
+  public boolean GetCopilotRawButton(int button) {
+    return copilotController.getRawButton(button);
+  }
+
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 

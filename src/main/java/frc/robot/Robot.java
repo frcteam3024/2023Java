@@ -91,10 +91,10 @@ public class Robot extends TimedRobot {
     //  m_autonomousCommand.cancel();
     //}
     
-    //initMotor = new InitMotor();
-    //if (initMotor != null) {
-    //initMotor.schedule();
-    //}
+    initMotor = new InitMotor();
+    if (initMotor != null) {
+    initMotor.schedule();
+    }
 
     tankDrive = new TankDrive();
     if (tankDrive != null) {
